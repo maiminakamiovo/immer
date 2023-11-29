@@ -73,7 +73,7 @@ const HomePage = () => {
 
     const modifyDefaultData = () => {
         dataMap[0].name = 'Jim';
-        console.log(dataMap);
+        // console.log(dataMap);
         setDataMap(dataMap);
     };
 
