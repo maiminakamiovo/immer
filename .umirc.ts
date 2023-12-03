@@ -12,22 +12,22 @@ export default defineConfig({
   routes: [
     {
       path: '/',
-      redirect: '/home',
+      redirect: '/produce',
     },
     {
-      name: '首页',
-      path: '/home',
-      component: './Home',
+      name: 'produce',
+      path: '/produce',
+      component: './Produce',
     },
     {
-      name: '权限演示',
-      path: '/access',
-      component: './Access',
+      name: 'immerdemo',
+      path: '/immerdemo',
+      component: './ImmerDemo',
     },
     {
-      name: ' CRUD 示例',
-      path: '/table',
-      component: './Table',
+      name: 'useImmer',
+      path: '/useImmer',
+      component: './UseImmer',
     },
   ],
   npmClient: 'yarn',
