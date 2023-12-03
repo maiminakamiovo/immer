@@ -20,61 +20,54 @@ const ImmerDemo = () => {
     }
   }
 
-  // function immer(state, thunk) {
-  //   const handler = {
-  //     get(target, prop) {
-  //       return target[prop]; // 直接返回属性值
-  //     },
-
-
-  //     set(target, prop, value) {
-  //       const copy = { ...target };
-  //       // 浅拷贝只复制了原始数据对象的属性 而没有复制属性值所引用的对象 
-  //       // 对于属性值是对象的情况copy的对象和原始数据对象会共享同一个对象
-  //       copy[prop] = value; // 给拷贝对象赋值
-  //       thunk(copy); // 调用 thunk 函数÷
-  //       return true; // 必须返回 true 表示修改成功
-  //     }
-  //   };
-
-  //   const proxy = new Proxy(state, handler);
-  //   thunk(proxy);
-  //   return proxy;
-  // }
-
-  // const newState = immer(state, draft => {
-  //   draft.name = 'Bob';
-  //   draft.email = 'qqaa';
-  //   draft.hobbies.read = '3';
-  // });
-
-  function immer(state, thunk) {
+  function immer(state, callback) {
     const handler = {
       get(target, prop) {
-        return target[prop]; // 直接返回属性值
+        let value = target[prop];  // 草稿
+        if (typeof value === 'object' && value !== null) {
+          return new Proxy(value, handler); // 对嵌套对象进行代理
+        }
+        return value; 
       },
+
+      // set(target, prop, value) {
+      //   let copy = Array.isArray(target) ? [...target] : { ...target };
+      //   console.log(copy,prop,value);
+      //   copy[prop] = value;
+      //   callback(copy);
+      //   return true;
+      // }
+
+      // 错误示例 
       set(target, prop, value) {
         let copy = target;
         // 浅拷贝只复制了原始数据对象的属性 而没有复制属性值所引用的对象 
         // 对于属性值是对象的情况copy的对象和原始数据对象会共享同一个对象
         copy[prop] = value; // 给拷贝对象赋值
-        thunk(copy); // 调用 thunk 函数，并传递修改后的对象
+        callback(copy); // 调用 c'a'l'l'ba'c'k 函数，并传递修改后的对象
         return true; // 返回 true 表示修改成功
       }
     };
 
     const proxy = new Proxy(state, handler);
-    thunk(proxy);
+    callback(proxy);
     return proxy; // 返回代理对象
   }
 
   const newState = immer(state, draft => {
     draft.name = 'Bob';
     draft.email = 'qqaa';
-    draft.hobbies = { ...draft.hobbies, read: '3' }; // 修改嵌套对象的属性
+    if (!draft.hobbies) { // 如果 hobbies 对象不存在，则进行初始化
+      draft.hobbies = {};
+    }
+    draft.hobbies.read = '3';
+    // 直接写draft.hobbies.read = '3';可能导致找不到hobbies
+    // draft.hobbies = { ...draft.hobbies, read: '3' };  修改嵌套对象的性
   });
 
-  console.log(JSON.stringify(newState))
+  console.log(newState)
+  console.log(JSON.stringify(newState));
+  // 这里返回的还是个proxy对象 查看的话可以可以使用JSON.stringify打印查看
 
   return (
     <PageContainer
