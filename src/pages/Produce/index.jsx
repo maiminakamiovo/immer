@@ -1,15 +1,17 @@
 import { PageContainer } from '@ant-design/pro-components';
-import { useAccess } from '@umijs/max';
 import { Button, Card, Table } from 'antd';
 import { produce } from 'immer';
 import { useCallback, useState } from 'react';
 
 export default function AccessPage() {
-    const access = useAccess();
     const [todoList, setTodolist] = useState([
         { name: 'lily', age: 12 },
         { name: 'judy', age: 13 },
     ]);
+
+    let val = { name: 'lily', age: 12, val: { key: '1' } };
+
+    const [todo, setTodo] = useState(val);
 
     const columns = [
         { title: 'Full Name', dataIndex: 'name', key: 'name', fixed: 'left' },
@@ -27,6 +29,19 @@ export default function AccessPage() {
         );
     });
 
+    // 增
+    const chanegTodo = useCallback((val1, val2) => {
+        setTodo(
+            produce((draft) => {    
+                draft[val1] = val2;
+                console.log(draft);
+            }),
+        );
+    });
+
+    console.log(todo);
+    console.log(val);
+
     // 删
     const handleRemove = useCallback((val) => {
         setTodolist(
@@ -43,8 +58,8 @@ export default function AccessPage() {
     const handleChange = useCallback((val1, val2, val3) => {
         setTodolist(
             produce((draft) => {
-                let todu = draft.findIndex((index) => index.name === val1);
-                draft[todu][val2] = val3;
+                let todo = draft.findIndex((index) => index.name === val1);
+                draft[todo][val2] = val3;
             }),
         );
     });
@@ -53,7 +68,8 @@ export default function AccessPage() {
     const handleSearch = useCallback((val) => {
         setTodolist(
             produce((draft) => {
-                // 这里filter返回的是一个新数组 则需要return   pusu splice 等函数是直接修改原始数组的方法，它们会改变原始数组并返回修改后的数组长度，而不是返回修改后的数组本身
+                // 这里filter返回的是一个新数组 则需要return   pusu splice
+                // 等函数是直接修改原始数组的方法，它们会改变原始数组并返回修改后的数组长度，而不是返回修改后的数组本身
                 return draft.filter((index) => index.name === val);
             }),
         );
@@ -73,6 +89,7 @@ export default function AccessPage() {
                         <Button onClick={() => handleRemove('judy')}>remove</Button>
                         <Button onClick={() => handleChange('lily', 'age', 88)}>edit</Button>
                         <Button onClick={() => handleSearch('judy')}>search</Button>
+                        <Button onClick={() => chanegTodo('name', 'wwww')}>search</Button>
                     </>
                 }
             >
