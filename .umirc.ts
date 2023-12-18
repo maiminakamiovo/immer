@@ -29,6 +29,11 @@ export default defineConfig({
       path: '/useImmer',
       component: './UseImmer',
     },
+    {
+      name: 'redux-useImmer',
+      path: '/reduxImmer',
+      component: './ImmerForRedux',
+    },
   ],
   npmClient: 'yarn',
 });

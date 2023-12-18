@@ -42,7 +42,6 @@ const HomePage = () => {
     }
     const [dataMap, setDataMap] = useState(data);
     const [person, updatePerson] = useImmer(data);
-
     const [state, dispatch] = useImmerReducer(reducer, initialState);
     // 使用useImmerReducer创建的Reducer函数中，我们不需要再手动处理状态的更新，
     // 因为useImmerReducer已经自动使用immer来处理了状态的更新。这样可以让我们更方便地使用可变的操作来修改原有对象或数组中的某一项
@@ -68,20 +67,28 @@ const HomePage = () => {
     function updateName(name) {
         updatePerson((draft) => {
             draft[0].name = name;
+            console.log(draft);
+            console.log(JSON.stringify(draft));
         });
     }
 
+    console.log(data);
+    console.log(person);
+
     const modifyDefaultData = () => {
-        dataMap[0].name = 'Jim';
-        // console.log(dataMap);
+        dataMap[0]['name'] = 'Jim';
         setDataMap(dataMap);
     };
 
+    // Cannot assign to read only property '0' of object '[object Array]'   出现此原因 是因为immer冻结了初始state
+    // 通过 produce 生成的 nextState 是被冻结freeze的 immer内部使用Object.freeze方法，
+    // 只冻结 nextState 跟 currentState 相比修改的部分，这样，当直接修改nextState 时将会报错 这使得 nextState 成为了真正的不可变数据。
+
     useEffect(() => {
-        console.log(32323);
-        console.log(dataMap);
-        console.log(person);
-        console.log(state.users);
+        // console.log(32323);
+        // console.log(dataMap);
+        // console.log(person);
+        // console.log(state.users);
         // 不会执行
     }, [dataMap, person, state.users]);
 
