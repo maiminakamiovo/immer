@@ -30,7 +30,7 @@ const reducer = (state, action) => {
     }
 };
 
-const HomePage = () => {
+export default function HomePage() {
     let data = [];
     for (let i = 0; i < 12; i++) {
         data.push({
@@ -42,15 +42,15 @@ const HomePage = () => {
     }
     const [dataMap, setDataMap] = useState(data);
     const [person, updatePerson] = useImmer(data);
-    const [state, dispatch] = useImmerReducer(reducer, initialState);
     // 使用useImmerReducer创建的Reducer函数中，我们不需要再手动处理状态的更新，
     // 因为useImmerReducer已经自动使用immer来处理了状态的更新。这样可以让我们更方便地使用可变的操作来修改原有对象或数组中的某一项
+    const [state, dispatch] = useImmerReducer(reducer, initialState);
 
+    // 在updateUser函数中，我们通过调用dispatch函数并传入updateUser类型的action来更新一个用户的信息。
+    // 在Reducer函数中，我们使用find方法找到指定ID的用户对象，并直接修改其name和age属性
     const updateUser = (payload) => {
         dispatch({ type: 'updateUser', payload });
     };
-    // 在updateUser函数中，我们通过调用dispatch函数并传入updateUser类型的action来更新一个用户的信息。
-    // 在Reducer函数中，我们使用find方法找到指定ID的用户对象，并直接修改其name和age属性。
 
     const columns = [
         { title: 'Full Name', dataIndex: 'name', key: 'name', fixed: 'left' },
@@ -71,9 +71,6 @@ const HomePage = () => {
             console.log(JSON.stringify(draft));
         });
     }
-
-    console.log(data);
-    console.log(person);
 
     const modifyDefaultData = () => {
         dataMap[0]['name'] = 'Jim';
@@ -107,13 +104,11 @@ const HomePage = () => {
                 <ul>
                     {state.users.map((user) => (
                         <li key={user.id}>
-                            {user.name} - {user.age}{' '}
+                            {user.name} - {user.age}
                         </li>
                     ))}
                 </ul>
             </Card>
         </PageContainer>
     );
-};
-
-export default HomePage;
+}

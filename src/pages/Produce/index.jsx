@@ -9,16 +9,13 @@ export default function AccessPage() {
         { name: 'judy', age: 13 },
     ]);
 
-    let val = { name: 'lily', age: 12, val: { key: '1' } };
-
     const [todo, setTodo] = useState(val);
 
+    let val = { name: 'lily', age: 12, val: { key: '1' } };
     const columns = [
         { title: 'Full Name', dataIndex: 'name', key: 'name', fixed: 'left' },
         { title: 'Age', dataIndex: 'age', key: 'age', fixed: 'left' },
     ];
-
-    // 直接使用deepCopy和使用produce有什么区别
 
     // 增
     const handleAdd = useCallback((obj) => {
@@ -32,15 +29,12 @@ export default function AccessPage() {
     // 增
     const chanegTodo = useCallback((val1, val2) => {
         setTodo(
-            produce((draft) => {    
+            produce((draft) => {
                 draft[val1] = val2;
                 console.log(draft);
             }),
         );
     });
-
-    console.log(todo);
-    console.log(val);
 
     // 删
     const handleRemove = useCallback((val) => {
