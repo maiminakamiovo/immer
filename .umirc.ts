@@ -15,22 +15,22 @@ export default defineConfig({
       redirect: '/produce',
     },
     {
-      name: 'produce',
+      name: 'produce示例',
       path: '/produce',
       component: './Produce',
     },
     {
-      name: 'immerdemo',
+      name: '手写Immer',
       path: '/immerdemo',
       component: './ImmerDemo',
     },
     {
-      name: 'useImmer',
+      name: 'useImmer示例',
       path: '/useImmer',
       component: './UseImmer',
     },
     {
-      name: 'redux-useImmer',
+      name: 'redux结合Immer使用示例',
       path: '/reduxImmer',
       component: './ImmerForRedux',
     },

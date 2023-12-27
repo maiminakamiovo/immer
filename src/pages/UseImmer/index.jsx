@@ -32,7 +32,7 @@ const reducer = (state, action) => {
 
 export default function HomePage() {
     let data = [];
-    for (let i = 0; i < 12; i++) {
+    for (let i = 0; i < 6; i++) {
         data.push({
             key: i,
             name: `Edward ${i}`,

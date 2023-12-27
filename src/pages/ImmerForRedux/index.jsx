@@ -1,5 +1,6 @@
-import { Button } from 'antd';
+import { Button, Card, Table } from 'antd';
 import { produce } from 'immer';
+import { useEffect, useState } from 'react';
 import { createStore } from 'redux';
 
 const UserForm = () => {
@@ -55,13 +56,42 @@ const UserForm = () => {
         console.log('Current State:', store.getState());
     });
 
+    const [formData, setFormData] = useState(store.getState()); // 组件内部状态保存表单数据
+    useEffect(() => {
+        const unsubscribe = store.subscribe(() => {
+            const updatedFormData = store.getState();
+            setFormData(updatedFormData);
+        });
+
+        return () => {
+            unsubscribe();
+        };
+    }, [formData]);
+
+    console.log(formData);
+
     return (
         <div>
-            <Button onClick={() => store.dispatch({ type: 'ADD_TODO', id: 3, text: 'Learn Redux' })}>Add</Button>
-            <Button onClick={() => store.dispatch({ type: 'DELETE_TODO', id: 2 })}>Del</Button>
-            <Button onClick={() => store.dispatch({ type: 'EDIT_TODO', id: 1, text: 'Hello,world' })}>Edit</Button>
-            <Button onClick={() => store.dispatch({ type: 'SEARCH_TODO', id: 1 })}>Search</Button>
-            <Button onClick={() => store.dispatch({ type: 'RESET_TODOS' })}> Reset</Button>
+            <Card
+                extra={
+                    <>
+                        <Button onClick={() => store.dispatch({ type: 'ADD_TODO', id: 3, text: 'Learn Redux' })}>Add</Button>
+                        <Button onClick={() => store.dispatch({ type: 'DELETE_TODO', id: 2 })}>Del</Button>
+                        <Button onClick={() => store.dispatch({ type: 'EDIT_TODO', id: 1, text: 'Hello,world' })}>Edit</Button>
+                        <Button onClick={() => store.dispatch({ type: 'SEARCH_TODO', id: 1 })}>Search</Button>
+                        <Button onClick={() => store.dispatch({ type: 'RESET_TODOS' })}> Reset</Button>
+                    </>
+                }
+            >
+                <Table
+                    columns={[
+                        { title: 'ID', dataIndex: 'id' },
+                        { title: 'Text', dataIndex: 'text' },
+                        { title: 'Status', dataIndex: 'completed', render: (text) => (text ? '完成' : '未完成') },
+                    ]}
+                    dataSource={formData.todos}
+                />
+            </Card>
         </div>
     );
 };
